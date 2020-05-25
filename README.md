@@ -1,6 +1,6 @@
 
 
-# IBM Kuberneteando sobre IBM Cloud Workhshop
+# IBM Kuberneteando sobre IBM Cloud Workshop
 
 ---
 # Kuberneteando 3 - Kubernetes Hands-on
