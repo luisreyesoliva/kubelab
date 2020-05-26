@@ -178,6 +178,17 @@ where you scale your application that model will not work because
 based on which instance of the application the user is routed to they'll see
 very different results.
 
+```
+var (
+	// For when Redis is used
+	masterPool *simpleredis.ConnectionPool
+	slavePool  *simpleredis.ConnectionPool
+
+	// For when Redis is not used, we just keep it in memory
+	lists map[string][]string = map[string][]string{}
+)
+```
+
 To solve this we need to have all instances of our app share the same data
 store - in this case we're going to use a redis database that we deploy to our
 cluster. This instance of redis will be defined in a similar manner to the guestbook.
