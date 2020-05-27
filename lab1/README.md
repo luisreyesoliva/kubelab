@@ -17,7 +17,7 @@ git clone https://github.com/luisreyesoliva/kubelab
 cd kubelab/lab1
 ```
 
-For this tutorial, we have taken a simple Hello World! Node.js application to deploy on Kubernetes as shown. The following is code from our sample app; use one that you have on hand.
+For this tutorial, we have taken a simple Hello World! Node.js application to deploy on Kubernetes as shown. The following is code from our sample app; or you can use one that you have on hand.
 
 
 ``` javascript
@@ -242,7 +242,28 @@ container image. This allows you to easily update the running image and also all
 easily undo a rollout if a problem is discovered during or after deployment.
 
 In the previous lab, we used an image with a `1.0` tag. For our upgrade
-we'll use the image with the `2.0` tag.
+we'll change the app.js code 
+
+``` javascript
+  const app = require('express')()
+
+  app.get('/', (req, res) => {
+    res.send("<YOUR CHANGE HERE>");
+  });
+
+  var port = 3300;
+
+  var server = app.listen(port, function () {
+    console.log("Server listening on " + port);
+  })
+
+  module.exports.app = app;
+```
+
+and push a new version of the image with the `2.0` tag.
+
+`$ ibmcloud cr build -t us.icr.io/<yournamespace>/helloapp:2.0 `
+
 
 To update and roll back:
 1. Using `kubectl`, you can now update your deployment to use the
