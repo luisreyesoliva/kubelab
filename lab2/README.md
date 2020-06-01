@@ -195,6 +195,8 @@ To solve this we need to have all instances of our app share the same data
 store - in this case we're going to use a redis database that we deploy to our
 cluster. This instance of redis will be defined in a similar manner to the guestbook.
 
+Note. For simplifying, we will only deploy the redis-master component of the architecture.
+
 **redis-master-deployment.yaml**
 
 ```yaml
@@ -219,7 +221,7 @@ spec:
     spec:
       containers:
       - name: redis-master
-        image: redis:2.8.23
+        image: redis:3.2.9
         ports:
         - name: redis-server
           containerPort: 6379
@@ -228,7 +230,7 @@ spec:
 This yaml creates a redis database in a Deployment named 'redis-master'.
 It will create a single instance, with replicas set to 1, and the guestbook app instances
 will connect to it to persist data, as well as read the persisted data back.
-The image running in the container is 'redis:2.8.23' and exposes the standard redis port 6379.
+The image running in the container is 'redis:3.2.9' and exposes the standard redis port 6379.
 
 - Create a redis Deployment, like we did for guestbook:
 
@@ -316,8 +318,6 @@ That's the end of the lab. Now let's clean-up our environment:
 ```console
 $ kubectl delete -f guestbook-deployment.yaml
 $ kubectl delete -f guestbook-service.yaml
-$ kubectl delete -f redis-slave-service.yaml
-$ kubectl delete -f redis-slave-deployment.yaml 
 $ kubectl delete -f redis-master-service.yaml 
 $ kubectl delete -f redis-master-deployment.yaml
 ```
