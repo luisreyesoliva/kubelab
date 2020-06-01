@@ -183,6 +183,9 @@ In this part of the lab we will deploy an application called `helloapp` that has
    
 Congratulations, you've now deployed an application to Kubernetes!
 
+![Deployment architecture](../images/Kubelab-1.png)
+
+
 
 ## Step 6. Scale apps with replicas
 
