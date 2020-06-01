@@ -191,7 +191,6 @@ A *replica* is a copy of a pod that contains a running service. By having
 multiple replicas of a pod, you can ensure your deployment has the available
 resources to handle increasing load on your application.
 
-![Deployment architecture](../images/Kubelab-1.png)
 
 1. `kubectl` provides a `scale` subcommand to change the size of an
    existing deployment. Let's increase our capacity from a single running instance of
@@ -203,8 +202,9 @@ resources to handle increasing load on your application.
    ```
 
    Kubernetes will now try to make reality match the desired state of
-   10 replicas by starting 9 new pods with the same configuration as
+   3 replicas by starting 2 new pods with the same configuration as
    the first.
+   
 
 4. To see your changes being rolled out, you can run:
    `kubectl rollout status deployment helloapp`.
@@ -222,7 +222,7 @@ resources to handle increasing load on your application.
 5. Once the rollout has finished, ensure your pods are running by using:
    `kubectl get pods`.
 
-   You should see output listing 10 replicas of your deployment:
+   You should see output listing 3 replicas of your deployment:
 
    ```console
    $ kubectl get pods
@@ -232,11 +232,13 @@ resources to handle increasing load on your application.
    helloapp-b8494f69c-vxpvg     1/1     Running   0          43s
    ```
 
+   ![Deployment architecture](../images/Kubelab-1.png)
+
+
 **Tip:** Another way to improve availability is to
 [add clusters and regions](https://console.bluemix.net/docs/containers/cs_planning.html#cs_planning_cluster_config)
 to your deployment, as shown in the following diagram:
 
-![HA with more clusters and regions](../images/cluster_ha_roadmap.png)
 
 ## Step 7. Update and roll back apps
 
