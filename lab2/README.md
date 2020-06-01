@@ -145,7 +145,7 @@ spec:
     targetPort: http-server
   selector:
     app: guestbook
-  type: LoadBalancer
+  type: NodePort
 ```
 
 The above configuration creates a Service resource named guestbook. A Service
@@ -167,6 +167,8 @@ Deployment container spec.
   `$ kubectl describe service guestbook`
   and
   `$ ibmcloud cs workers <name-of-cluster>`
+
+   ![Deployment architecture](../images/Kubelab-2.1.png)
 
 # 2. Connect to a back-end service.
 
@@ -293,7 +295,7 @@ port 6379 on the pods selected by the selectors "app=redis" and "role=master".
 - Restart guestbook so that it will find the redis service to use database:
 
     ```console
-    $ kubectl delete deploy guestbook-v1
+    $ kubectl delete deploy guestbook
     $ kubectl create -f guestbook-deployment.yaml
     ```
 
@@ -305,108 +307,9 @@ to access the different copies of guestbook that they all have a consistent stat
 All instances write to the same backing persistent storage, and all instances
 read from that storage to display the guestbook entries that have been stored.
 
-We have our simple 3-tier application running but we need to scale the
-application if traffic increases. Our main bottleneck is that we only have
-one database server to process each request coming though guestbook. One
-simple solution is to separate the reads and write such that they go to
-different databases that are replicated properly to achieve data consistency.
+   ![Deployment architecture](../images/Kubelab-2.2.png)
 
-![rw_to_master](../images/Master.png)
 
-Create a deployment named 'redis-slave' that can talk to redis database to
-manage data reads. In order to scale the database we use the pattern where
-we can scale the reads using redis slave deployment which can run several
-instances to read. Redis slave deployments is configured to run two replicas.
-
-![w_to_master-r_to_slave](../images/Master-Slave.png)
-
-**redis-slave-deployment.yaml**
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: redis-slave
-  labels:
-    app: redis
-    role: slave
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: redis
-      role: slave
-  template:
-    metadata:
-      labels:
-        app: redis
-        role: slave
-    spec:
-      containers:
-      - name: redis-slave
-        image: kubernetes/redis-slave:v2
-        ports:
-        - name: redis-server
-          containerPort: 6379
-```
-
-- Create the pod  running redis slave deployment.
- ``` $ kubectl create -f redis-slave-deployment.yaml ```
-
- - Check if all the slave replicas are running
- ```console
-$ kubectl get pods -l app=redis,role=slave
-NAME                READY     STATUS    RESTARTS   AGE
-redis-slave-kd7vx   1/1       Running   0          2d
-redis-slave-wwcxw   1/1       Running   0          2d
- ```
-
-- And then go into one of those pods and look at the database to see
-  that everything looks right:
-
- ```console
-$ kubectl exec -it redis-slave-kd7vx  redis-cli
-127.0.0.1:6379> keys *
-1) "guestbook"
-127.0.0.1:6379> lrange guestbook 0 10
-1) "hello world"
-2) "welcome to the Kube workshop"
-127.0.0.1:6379> exit
-```
-
-Deploy redis slave service so we can access it by DNS name. Once redeployed,
-the application will send "read" operations to the `redis-slave` pods while
-"write" operations will go to the `redis-master` pods.
-
-**redis-slave-service.yaml**
-
-```yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: redis-slave
-  labels:
-    app: redis
-    role: slave
-spec:
-  ports:
-  - port: 6379
-    targetPort: redis-server
-  selector:
-    app: redis
-    role: slave
-```
-
-- Create the service to access redis slaves.
-    ``` $ kubectl create -f redis-slave-service.yaml ```
-
-- Restart guestbook so that it will find the slave service to read from.
-    ```console
-    $ kubectl delete deploy guestbook-v1
-    $ kubectl create -f guestbook-deployment.yaml
-    ```
-    
-- Test guestbook app using a browser of your choice using the url `<your-cluster-ip>:<node-port>`.
 
 That's the end of the lab. Now let's clean-up our environment:
 
