@@ -183,8 +183,6 @@ In this part of the lab we will deploy an application called `helloapp` that has
    
 Congratulations, you've now deployed an application to Kubernetes!
 
-![Deployment architecture](../images/Kubelab-1.png)
-
 
 
 ## Step 6. Scale apps with replicas
@@ -192,6 +190,8 @@ Congratulations, you've now deployed an application to Kubernetes!
 A *replica* is a copy of a pod that contains a running service. By having
 multiple replicas of a pod, you can ensure your deployment has the available
 resources to handle increasing load on your application.
+
+![Deployment architecture](../images/Kubelab-1.png)
 
 1. `kubectl` provides a `scale` subcommand to change the size of an
    existing deployment. Let's increase our capacity from a single running instance of
