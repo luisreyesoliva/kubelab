@@ -15,14 +15,17 @@ Kubernetes cluster.
 Before we work with the application we need to clone a github repo:
 
 ```
-$ git clone https://github.com/IBM/guestbook.git
+$ cd
+mkdir kuberneteando3
+cd kuberneteando3
+git clone https://github.com/luisreyesoliva/kubelab
+cd kubelab/lab2
 ```
 
 This repo contains multiple versions of the guestbook application
 as well as the configuration files we'll use to deploy the pieces of the application.
 
-Change directory by running the command `cd guestbook`. You will find all the
-configurations files for this exercise under the directory `v1`.
+You will find all the configurations files for this exercise under the directory `lab2`.
 
 # 1. Scale apps natively
 
