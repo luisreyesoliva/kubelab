@@ -267,7 +267,7 @@ we'll change the app.js code
 
 and push a new version of the image with the `2.0` tag.
 
-`$ ibmcloud cr build -t us.icr.io/<yournamespace>/helloapp:2.0 `
+`$ ibmcloud cr build -t us.icr.io/<yournamespace>/helloapp:2.0 .`
 
 
 To update and roll back:
@@ -304,10 +304,10 @@ To update and roll back:
    The deployment manages these two sets of pods with a resource called a ReplicaSet.
    We can see the guestbook ReplicaSets with:
    ```console
-   $ kubectl get replicasets -l run=guestbook
+   $ kubectl get replicasets -l run=helloapp
    NAME                   DESIRED   CURRENT   READY     AGE
-   guestbook-5f5548d4f    10        10        10        21m
-   guestbook-768cc55c78   0         0         0         3h
+    helloapp-5d57c4cc8d   3         3         3       87m
+    helloapp-b8494f69c    0         0         0       151m
    ```
 
 Before we continue, let's delete the application so we can learn about
